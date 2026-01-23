@@ -6,23 +6,16 @@ import { Analytics } from "./components/analytics";
 
 export const metadata: Metadata = {
   title: {
-    default: "chronark.com",
-    template: "%s | chronark.com",
+    default: "Kyle Tran",
+    template: "%s | Kyle Tran",
   },
-  description: "Co-founder of unkey.dev and founder of planetfall.io",
+  description: "Building products & empowering non-technical builders to build.",
   openGraph: {
-    title: "chronark.com",
+    title: "Kyle Tran",
     description:
-      "Co-founder of unkey.dev and founder of planetfall.io",
-    url: "https://chronark.com",
-    siteName: "chronark.com",
-    images: [
-      {
-        url: "https://chronark.com/og.png",
-        width: 1920,
-        height: 1080,
-      },
-    ],
+      "Building products & empowering non-technical builders to build.",
+    url: "https://kyletran.com",
+    siteName: "Kyle Tran",
     locale: "en-US",
     type: "website",
   },
@@ -38,7 +31,7 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: "Chronark",
+    title: "Kyle Tran",
     card: "summary_large_image",
   },
   icons: {
