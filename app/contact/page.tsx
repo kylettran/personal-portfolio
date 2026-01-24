@@ -1,16 +1,11 @@
 "use client";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
 
 const socials = [
-	{
-		icon: <Twitter size={20} />,
-		href: "https://twitter.com/kylettran",
-		label: "X",
-		handle: "@kyle_trxn",
-	},
 	{
 		icon: <Linkedin size={20} />,
 		href: "https://www.linkedin.com/in/kyletran01/",
@@ -23,6 +18,12 @@ const socials = [
 		label: "Github",
 		handle: "Kyle Tran",
 	},
+	{
+		icon: <Twitter size={20} />,
+		href: "https://twitter.com/kylettran",
+		label: "X",
+		handle: "@kyle_trxn",
+	},
 ];
 
 export default function Example() {
@@ -30,13 +31,25 @@ export default function Example() {
 		<div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
 			<Navigation />
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
-				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-3 lg:gap-16">
+				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-4 lg:gap-16">
+					{/* Portrait Card */}
+					<Card>
+						<div className="relative w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
+							<Image
+								src="/portrait.JPEG"
+								alt="Kyle Tran"
+								fill
+								className="object-cover"
+							/>
+						</div>
+					</Card>
+
 					{socials.map((s) => (
-						<Card>
+						<Card key={s.label}>
 							<Link
 								href={s.href}
 								target="_blank"
-								className="p-4 relative flex flex-col items-center gap-4 duration-700 group md:gap-8 md:py-24  lg:pb-48  md:p-16"
+								className="p-4 relative flex flex-col items-center gap-4 duration-700 group md:gap-8 md:py-24 lg:pb-48 md:p-16"
 							>
 								<span
 									className="absolute w-px h-2/3 bg-gradient-to-b from-zinc-500 via-zinc-500/50 to-transparent"
