@@ -1,16 +1,27 @@
 "use client";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Navigation } from "../components/nav";
 import { Card } from "../components/card";
+
+const XIcon = () => (
+	<svg
+		viewBox="0 0 24 24"
+		width="20"
+		height="20"
+		fill="currentColor"
+	>
+		<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+	</svg>
+);
 
 const socials = [
 	{
 		icon: <Linkedin size={20} />,
 		href: "https://www.linkedin.com/in/kyletran01/",
 		label: "LinkedIn",
-		handle: "Portfolio",
+		handle: "Profile",
 	},
 	{
 		icon: <Github size={20} />,
@@ -19,7 +30,7 @@ const socials = [
 		handle: "Kyle Tran",
 	},
 	{
-		icon: <Twitter size={20} />,
+		icon: <XIcon />,
 		href: "https://twitter.com/kylettran",
 		label: "X",
 		handle: "@kyle_trxn",
@@ -39,7 +50,7 @@ export default function Example() {
 								src="/portrait.JPEG"
 								alt="Kyle Tran"
 								fill
-								className="object-cover object-top"
+								className="object-cover object-[center_25%]"
 							/>
 						</div>
 					</Card>
