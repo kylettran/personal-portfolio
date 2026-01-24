@@ -42,10 +42,10 @@ export default function Example() {
 		<div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
 			<Navigation />
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
-				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-4 lg:gap-16 items-center">
+				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-4 lg:gap-16">
 					{/* Portrait Card */}
 					<Card>
-						<div className="relative w-full min-h-[250px] md:min-h-[300px] lg:min-h-[350px] overflow-hidden">
+						<div className="relative w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
 							<Image
 								src="/portrait.JPEG"
 								alt="Kyle Tran"
