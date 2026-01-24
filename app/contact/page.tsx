@@ -50,7 +50,7 @@ export default function Example() {
 								src="/portrait.JPEG"
 								alt="Kyle Tran"
 								fill
-								className="object-cover object-[60%_30%]"
+								className="object-cover object-[55%_30%]"
 							/>
 						</div>
 					</Card>
