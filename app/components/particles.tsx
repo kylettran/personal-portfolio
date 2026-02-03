@@ -27,9 +27,7 @@ export default function Particles({
 	const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 	const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
-	const lastMoveAt = useRef<number>(Date.now());
 	const nextShotAt = useRef<number>(Date.now() + 6000);
-	const lastFrameAt = useRef<number>(Date.now());
 
 	useEffect(() => {
 		if (canvasRef.current) {
@@ -67,7 +65,6 @@ export default function Particles({
 			if (inside) {
 				mouse.current.x = x;
 				mouse.current.y = y;
-				lastMoveAt.current = Date.now();
 			}
 		}
 	};
@@ -86,15 +83,16 @@ export default function Particles({
 	};
 
 	type ShootingStar = {
-		x: number;
-		y: number;
-		vx: number;
-		vy: number;
 		length: number;
 		createdAt: number;
-		lastAt: number;
 		durationMs: number;
 		alpha: number;
+		startX: number;
+		startY: number;
+		ctrlX: number;
+		ctrlY: number;
+		endX: number;
+		endY: number;
 	};
 
 	const resizeCanvas = () => {
@@ -106,7 +104,7 @@ export default function Particles({
 			canvasRef.current.height = canvasSize.current.h * dpr;
 			canvasRef.current.style.width = `${canvasSize.current.w}px`;
 			canvasRef.current.style.height = `${canvasSize.current.h}px`;
-			context.current.scale(dpr, dpr);
+			context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
 		}
 	};
 
@@ -186,24 +184,79 @@ export default function Particles({
 	const randomBetween = (min: number, max: number) =>
 		Math.floor(Math.random() * (max - min + 1)) + min;
 
+	const getPathPointAndTangent = (star: ShootingStar, t: number) => {
+		const { startX, startY, ctrlX, ctrlY, endX, endY } = star;
+		const oneMinus = 1 - t;
+		const x =
+			oneMinus * oneMinus * startX +
+			2 * oneMinus * t * ctrlX +
+			t * t * endX;
+		const y =
+			oneMinus * oneMinus * startY +
+			2 * oneMinus * t * ctrlY +
+			t * t * endY;
+		const dx =
+			2 * oneMinus * (ctrlX - startX) + 2 * t * (endX - ctrlX);
+		const dy =
+			2 * oneMinus * (ctrlY - startY) + 2 * t * (endY - ctrlY);
+		const len = Math.hypot(dx, dy) || 1;
+		return { x, y, tx: dx / len, ty: dy / len };
+	};
+
 	const createShootingStar = (): ShootingStar => {
 		const { w, h } = canvasSize.current;
-		const length = Math.random() * 300 + 500;
-		const startX = -length * 0.5;
-		const startY = Math.random() * h * 0.6;
-		const speed = Math.random() * 200 + 900;
-		const angle = Math.random() * 0.25 + Math.PI * 0.15;
+		const margin = Math.max(w, h) * 0.12 + 60;
+		const edge = Math.floor(Math.random() * 4);
+		let startX = 0;
+		let startY = 0;
+		let endX = 0;
+		let endY = 0;
+
+		if (edge === 0) {
+			startX = -margin;
+			startY = Math.random() * h;
+			endX = w + margin;
+			endY = Math.random() * h;
+		} else if (edge === 1) {
+			startX = w + margin;
+			startY = Math.random() * h;
+			endX = -margin;
+			endY = Math.random() * h;
+		} else if (edge === 2) {
+			startX = Math.random() * w;
+			startY = -margin;
+			endX = Math.random() * w;
+			endY = h + margin;
+		} else {
+			startX = Math.random() * w;
+			startY = h + margin;
+			endX = Math.random() * w;
+			endY = -margin;
+		}
+
+		const midX = (startX + endX) / 2;
+		const midY = (startY + endY) / 2;
+		const nx = -(endY - startY);
+		const ny = endX - startX;
+		const nLen = Math.hypot(nx, ny) || 1;
+		const curve = (Math.random() * 0.04 + 0.03) * Math.hypot(w, h);
+		const direction = Math.random() > 0.5 ? 1 : -1;
+		const ctrlX = midX + (nx / nLen) * curve * direction;
+		const ctrlY = midY + (ny / nLen) * curve * direction;
+
+		const durationMs = 3000;
 		const now = Date.now();
 		return {
-			x: startX,
-			y: startY,
-			vx: Math.cos(angle) * speed,
-			vy: Math.sin(angle) * speed,
-			length,
+			length: Math.random() * 280 + 420,
 			createdAt: now,
-			lastAt: now,
-			durationMs: 3000,
+			durationMs,
 			alpha: Math.random() * 0.35 + 0.55,
+			startX,
+			startY,
+			ctrlX,
+			ctrlY,
+			endX,
+			endY,
 		};
 	};
 
@@ -212,23 +265,23 @@ export default function Particles({
 		const now = Date.now();
 		if (now >= nextShotAt.current) {
 			shootingStars.current.push(createShootingStar());
-			nextShotAt.current = now + 5000;
+			nextShotAt.current = now + 3000;
 		}
 
 		shootingStars.current = shootingStars.current.filter(
 			(star) => now - star.createdAt <= star.durationMs,
 		);
 		shootingStars.current.forEach((star) => {
-			const dt = (now - star.lastAt) / 1000;
-			star.lastAt = now;
-			star.x += star.vx * dt;
-			star.y += star.vy * dt;
-
-			const tailX = star.x - star.vx * (star.length / 1000);
-			const tailY = star.y - star.vy * (star.length / 1000);
+			const t = Math.min(
+				1,
+				Math.max(0, (now - star.createdAt) / star.durationMs),
+			);
+			const { x, y, tx, ty } = getPathPointAndTangent(star, t);
+			const tailX = x - tx * star.length;
+			const tailY = y - ty * star.length;
 			const gradient = context.current!.createLinearGradient(
-				star.x,
-				star.y,
+				x,
+				y,
 				tailX,
 				tailY,
 			);
@@ -236,13 +289,24 @@ export default function Particles({
 			gradient.addColorStop(1, "rgba(255, 200, 90, 0)");
 
 			context.current!.beginPath();
-			context.current!.moveTo(star.x, star.y);
+			context.current!.moveTo(x, y);
 			context.current!.lineTo(tailX, tailY);
 			context.current!.strokeStyle = gradient;
 			context.current!.lineWidth = 2.5;
 			context.current!.lineCap = "round";
 			context.current!.setTransform(dpr, 0, 0, dpr, 0, 0);
 			context.current!.stroke();
+
+			context.current!.beginPath();
+			context.current!.arc(x, y, 2.8, 0, 2 * Math.PI);
+			context.current!.fillStyle = `rgba(255, 230, 160, ${Math.min(
+				1,
+				star.alpha + 0.25,
+			)})`;
+			context.current!.shadowBlur = 12;
+			context.current!.shadowColor = "rgba(255, 200, 90, 0.6)";
+			context.current!.fill();
+			context.current!.shadowBlur = 0;
 		});
 	};
 
