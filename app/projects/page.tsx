@@ -7,18 +7,28 @@ import { Article } from "./article";
 import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
 
-const redis = Redis.fromEnv();
+const redis =
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+    ? Redis.fromEnv()
+    : null;
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  const views = (
-    await redis.mget<number[]>(
-      ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
-    )
-  ).reduce((acc, v, i) => {
-    acc[allProjects[i].slug] = v ?? 0;
-    return acc;
-  }, {} as Record<string, number>);
+  let views: Record<string, number> = {};
+  if (redis) {
+    try {
+      views = (
+        await redis.mget<number[]>(
+          ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
+        )
+      ).reduce((acc, v, i) => {
+        acc[allProjects[i].slug] = v ?? 0;
+        return acc;
+      }, {} as Record<string, number>);
+    } catch {
+      views = {};
+    }
+  }
 
   const featured = allProjects.find((project) => project.slug === "personal-portfolio")!;
   const top2 = allProjects.find((project) => project.slug === "buildrs-unite")!;

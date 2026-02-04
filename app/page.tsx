@@ -1,5 +1,7 @@
+ "use client";
+
 import Link from "next/link";
-import React from "react";
+import { useEffect } from "react";
 import Particles from "./components/particles";
 
 const navigation = [
@@ -8,6 +10,29 @@ const navigation = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const scrollY = window.scrollY;
+    document.body.style.setProperty("--home-scroll-y", `${scrollY}px`);
+    document.body.classList.add("home-lock-scroll");
+    root.classList.add("home-lock-scroll");
+    const preventScroll = (event: TouchEvent) => {
+      if (document.body.classList.contains("home-lock-scroll")) {
+        event.preventDefault();
+      }
+    };
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    return () => {
+      document.removeEventListener("touchmove", preventScroll);
+      document.body.classList.remove("home-lock-scroll");
+      root.classList.remove("home-lock-scroll");
+      const stored = document.body.style.getPropertyValue("--home-scroll-y");
+      document.body.style.removeProperty("--home-scroll-y");
+      const restore = stored ? parseInt(stored, 10) : 0;
+      window.scrollTo(0, restore);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
       <nav className="my-16 animate-fade-in">

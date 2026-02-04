@@ -6,5 +6,20 @@
   .text-edge-outline {
     -webkit-text-stroke: 1px rgba(255,255,255,0.3);
   }
-} 
+  
+  @media (max-width: 768px) {
+    html.home-lock-scroll,
+    body.home-lock-scroll {
+      overflow: hidden;
+      overscroll-behavior: none;
+      height: 100%;
+      touch-action: none;
+    }
 
+    body.home-lock-scroll {
+      position: fixed;
+      width: 100%;
+      top: calc(-1 * var(--home-scroll-y, 0px));
+    }
+  }
+} 

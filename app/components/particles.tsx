@@ -23,6 +23,7 @@ export default function Particles({
 	const context = useRef<CanvasRenderingContext2D | null>(null);
 	const circles = useRef<any[]>([]);
 	const shootingStars = useRef<any[]>([]);
+	const twinkleIndex = useRef<number | null>(null);
 	const mousePosition = useMousePosition();
 	const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -113,7 +114,7 @@ export default function Particles({
 		const y = Math.floor(Math.random() * canvasSize.current.h);
 		const translateX = 0;
 		const translateY = 0;
-		const size = Math.random() * 1.8 + 0.6;
+		const size = Math.random() * 2.2 + 0.9;
 		const alpha = 0;
 		const targetAlpha = parseFloat((Math.random() * 0.6 + 0.25).toFixed(2));
 		const dx = (Math.random() - 0.5) * 0.2;
@@ -137,16 +138,51 @@ export default function Particles({
 		if (context.current) {
 			const { x, y, translateX, translateY, size, alpha } = circle;
 			context.current.translate(translateX, translateY);
-			context.current.beginPath();
-			context.current.arc(x, y, size, 0, 2 * Math.PI);
-			context.current.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-			context.current.fill();
+			const outer = Math.max(size, 1.4);
+			drawStar(
+				x,
+				y,
+				outer,
+				outer * 0.5,
+				`rgba(255, 255, 255, ${alpha})`,
+			);
 			context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
 
 			if (!update) {
 				circles.current.push(circle);
 			}
 		}
+	};
+
+	const drawStar = (
+		x: number,
+		y: number,
+		outerRadius: number,
+		innerRadius: number,
+		fill: string,
+	) => {
+		if (!context.current) return;
+		const spikes = 5;
+		let rot = Math.PI / 2 * 3;
+		const step = Math.PI / spikes;
+		context.current.beginPath();
+		context.current.moveTo(x, y - outerRadius);
+		for (let i = 0; i < spikes; i++) {
+			context.current.lineTo(
+				x + Math.cos(rot) * outerRadius,
+				y + Math.sin(rot) * outerRadius,
+			);
+			rot += step;
+			context.current.lineTo(
+				x + Math.cos(rot) * innerRadius,
+				y + Math.sin(rot) * innerRadius,
+			);
+			rot += step;
+		}
+		context.current.lineTo(x, y - outerRadius);
+		context.current.closePath();
+		context.current.fillStyle = fill;
+		context.current.fill();
 	};
 
 	const clearContext = () => {
@@ -166,6 +202,11 @@ export default function Particles({
 		for (let i = 0; i < particleCount; i++) {
 			const circle = circleParams();
 			drawCircle(circle);
+		}
+		if (twinkleIndex.current === null && circles.current.length > 0) {
+			twinkleIndex.current = Math.floor(
+				Math.random() * circles.current.length,
+			);
 		}
 	};
 
@@ -285,8 +326,9 @@ export default function Particles({
 				tailX,
 				tailY,
 			);
-			gradient.addColorStop(0, `rgba(255, 200, 90, ${star.alpha})`);
-			gradient.addColorStop(1, "rgba(255, 200, 90, 0)");
+			gradient.addColorStop(0, `rgba(255, 210, 90, ${star.alpha})`);
+			gradient.addColorStop(0.4, `rgba(255, 140, 60, ${star.alpha * 0.8})`);
+			gradient.addColorStop(1, "rgba(220, 40, 40, 0)");
 
 			context.current!.beginPath();
 			context.current!.moveTo(x, y);
@@ -297,21 +339,30 @@ export default function Particles({
 			context.current!.setTransform(dpr, 0, 0, dpr, 0, 0);
 			context.current!.stroke();
 
-			context.current!.beginPath();
-			context.current!.arc(x, y, 2.8, 0, 2 * Math.PI);
-			context.current!.fillStyle = `rgba(255, 230, 160, ${Math.min(
-				1,
-				star.alpha + 0.25,
-			)})`;
-			context.current!.shadowBlur = 12;
-			context.current!.shadowColor = "rgba(255, 200, 90, 0.6)";
-			context.current!.fill();
+			context.current!.shadowBlur = 8;
+			context.current!.shadowColor = "rgba(255, 200, 90, 0.5)";
+			drawStar(
+				x,
+				y,
+				3.2,
+				1.5,
+				`rgba(255, 230, 160, ${Math.min(1, star.alpha + 0.2)})`,
+			);
 			context.current!.shadowBlur = 0;
 		});
 	};
 
 	const animate = () => {
 		clearContext();
+		if (
+			twinkleIndex.current === null ||
+			twinkleIndex.current >= circles.current.length
+		) {
+			twinkleIndex.current =
+				circles.current.length > 0
+					? Math.floor(Math.random() * circles.current.length)
+					: null;
+		}
 		circles.current.forEach((circle: Circle, i: number) => {
 			// Handle the alpha value
 			const edge = [
@@ -332,6 +383,16 @@ export default function Particles({
 			} else {
 				circle.alpha = circle.targetAlpha * remapClosestEdge;
 			}
+			const isTwinkle = twinkleIndex.current === i;
+			const twinklePulse = isTwinkle
+				? (Math.sin((Date.now() / 3000) * Math.PI * 2) + 1) / 2
+				: 0;
+			const renderAlpha = isTwinkle
+				? Math.min(1, circle.targetAlpha * (0.6 + twinklePulse * 1.2))
+				: circle.alpha;
+			const renderSize = isTwinkle
+				? circle.size * (1 + twinklePulse * 0.6)
+				: circle.size;
 			circle.x += circle.dx;
 			circle.y += circle.dy;
 			circle.translateX +=
@@ -349,6 +410,9 @@ export default function Particles({
 			) {
 				// remove the circle from the array
 				circles.current.splice(i, 1);
+				if (twinkleIndex.current === i) {
+					twinkleIndex.current = null;
+				}
 				// create a new circle
 				const newCircle = circleParams();
 				drawCircle(newCircle);
@@ -361,10 +425,35 @@ export default function Particles({
 						y: circle.y,
 						translateX: circle.translateX,
 						translateY: circle.translateY,
-						alpha: circle.alpha,
+						alpha: renderAlpha,
+						size: renderSize,
 					},
 					true,
 				);
+				if (isTwinkle && context.current) {
+					const sparkleAlpha = 0.12 + twinklePulse * 0.28;
+					const sparkleSize = renderSize * (0.7 + twinklePulse * 0.4);
+					context.current.shadowBlur = 10;
+					context.current.shadowColor = `rgba(255, 255, 255, ${sparkleAlpha})`;
+					drawStar(
+						circle.x,
+						circle.y,
+						sparkleSize * 1.2,
+						sparkleSize * 0.35,
+						`rgba(255, 255, 255, ${sparkleAlpha})`,
+					);
+					context.current.shadowBlur = 0;
+					context.current.beginPath();
+					context.current.strokeStyle = `rgba(255, 255, 255, ${
+						0.12 + twinklePulse * 0.2
+					})`;
+					context.current.lineWidth = 0.8;
+					context.current.moveTo(circle.x - sparkleSize * 1.2, circle.y);
+					context.current.lineTo(circle.x + sparkleSize * 1.2, circle.y);
+					context.current.moveTo(circle.x, circle.y - sparkleSize * 1.2);
+					context.current.lineTo(circle.x, circle.y + sparkleSize * 1.2);
+					context.current.stroke();
+				}
 			}
 		});
 		drawShootingStars();
