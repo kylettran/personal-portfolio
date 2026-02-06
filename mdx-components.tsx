@@ -12,6 +12,12 @@ export function useMDXComponents(components: any): any {
 		h2: ({ children }: PropsWithChildren) => (
 			<h2 className="text-zinc-50">{children}</h2>
 		),
+		img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+			<img
+				{...props}
+				className="mx-auto w-full max-w-3xl rounded-xl object-cover object-[50%_35%]"
+			/>
+		),
 		...components,
 	};
 }

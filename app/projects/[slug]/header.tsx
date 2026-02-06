@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Eye, Github, Twitter } from "lucide-react";
+import { ArrowLeft, Eye, Github } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -17,19 +17,6 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 	const ref = useRef<HTMLElement>(null);
 	const [isIntersecting, setIntersecting] = useState(true);
 
-	const links: { label: string; href: string }[] = [];
-	if (project.repository) {
-		links.push({
-			label: "GitHub",
-			href: `https://github.com/${project.repository}`,
-		});
-	}
-	if (project.url) {
-		links.push({
-			label: "Website",
-			href: project.url,
-		});
-	}
 	useEffect(() => {
 		if (!ref.current) return;
 		const observer = new IntersectionObserver(([entry]) =>
@@ -67,16 +54,21 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 								views,
 							)}
 						</span>
-						<Link target="_blank" href="https://twitter.com/chronark_">
-							<Twitter
+						<Link target="_blank" href="https://x.com/kyle_trxn">
+							<svg
+								viewBox="0 0 24 24"
+								aria-hidden="true"
 								className={`w-6 h-6 duration-200 hover:font-medium ${
 									isIntersecting
 										? " text-zinc-400 hover:text-zinc-100"
 										: "text-zinc-600 hover:text-zinc-900"
 								} `}
-							/>
+								fill="currentColor"
+							>
+								<path d="M18.244 2H21l-6.52 7.46L22 22h-6.828l-4.82-6.343L4.94 22H2l6.98-7.98L2 2h6.828l4.36 5.72L18.244 2Zm-1.2 18h1.5L7.04 4h-1.6l11.604 16Z" />
+							</svg>
 						</Link>
-						<Link target="_blank" href="https://github.com/chronark">
+						<Link target="_blank" href="https://github.com/kylettran">
 							<Github
 								className={`w-6 h-6 duration-200 hover:font-medium ${
 									isIntersecting
@@ -110,15 +102,6 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 						</p>
 					</div>
 
-					<div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
-						<div className="grid grid-cols-1 gap-y-6 gap-x-8 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-							{links.map((link) => (
-								<Link target="_blank" key={link.label} href={link.href}>
-									{link.label} <span aria-hidden="true">&rarr;</span>
-								</Link>
-							))}
-						</div>
-					</div>
 				</div>
 			</div>
 		</header>

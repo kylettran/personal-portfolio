@@ -30,9 +30,9 @@ export default async function ProjectsPage() {
     }
   }
 
-  const featured = allProjects.find((project) => project.slug === "personal-portfolio")!;
-  const top2 = allProjects.find((project) => project.slug === "buildrs-unite")!;
-  const top3 = allProjects.find((project) => project.slug === "ocr-intake-form")!;
+  const featured = allProjects.find((project) => project.slug === "buildrs-unite")!;
+  const top2 = allProjects.find((project) => project.slug === "personal-portfolio")!;
+  const top3 = allProjects.find((project) => project.slug === "envshare")!;
   const sorted = allProjects
     .filter((p) => p.published)
     .filter(
@@ -66,17 +66,7 @@ export default async function ProjectsPage() {
             <Link href={`/projects/${featured.slug}`}>
               <article className="relative w-full h-full p-4 md:p-8">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="text-xs text-zinc-100">
-                    {featured.date ? (
-                      <time dateTime={new Date(featured.date).toISOString()}>
-                        {Intl.DateTimeFormat(undefined, {
-                          dateStyle: "medium",
-                        }).format(new Date(featured.date))}
-                      </time>
-                    ) : (
-                      <span>SOON</span>
-                    )}
-                  </div>
+                  <div />
                   <span className="flex items-center gap-1 text-xs text-zinc-500">
                     <Eye className="w-4 h-4" />{" "}
                     {Intl.NumberFormat("en-US", { notation: "compact" }).format(
@@ -106,7 +96,11 @@ export default async function ProjectsPage() {
           <div className="flex flex-col w-full gap-8 mx-auto border-t border-gray-900/10 lg:mx-0 lg:border-t-0 ">
             {[top2, top3].map((project) => (
               <Card key={project.slug}>
-                <Article project={project} views={views[project.slug] ?? 0} />
+                <Article
+                  project={project}
+                  views={views[project.slug] ?? 0}
+                  showDate={false}
+                />
               </Card>
             ))}
           </div>
