@@ -1,8 +1,30 @@
 // @ts-nocheck
+"use client";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useMDXComponent } from "next-contentlayer/hooks";
+
+const BrainOrb = dynamic(
+	() => import("./brain-orb").then((mod) => mod.BrainOrb),
+	{
+		ssr: false,
+		loading: () => (
+			<div className="not-prose my-10 h-[420px] w-full rounded-2xl border border-zinc-200 bg-zinc-50" />
+		),
+	},
+);
+
+const BrainProjectLayout = dynamic(
+	() => import("./brain-project-layout").then((mod) => mod.BrainProjectLayout),
+	{
+		ssr: false,
+		loading: () => (
+			<div className="not-prose my-10 h-[420px] w-full rounded-2xl border border-white/10 bg-black" />
+		),
+	},
+);
 
 function clsx(...args: any) {
 	return args.filter(Boolean).join(" ");
@@ -161,6 +183,8 @@ const components = {
 		/>
 	),
 	Image,
+	BrainOrb,
+	BrainProjectLayout,
 };
 
 interface MdxProps {

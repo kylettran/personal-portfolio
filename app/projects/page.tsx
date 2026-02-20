@@ -30,9 +30,13 @@ export default async function ProjectsPage() {
     }
   }
 
-  const featured = allProjects.find((project) => project.slug === "buildrs-unite")!;
-  const top2 = allProjects.find((project) => project.slug === "personal-portfolio")!;
-  const top3 = allProjects.find((project) => project.slug === "envshare")!;
+  const featured = allProjects.find(
+    (project) => project.slug === "inside-look-into-my-brain",
+  )!;
+  const top2 = allProjects.find((project) => project.slug === "buildrs-unite")!;
+  const top3 = allProjects.find(
+    (project) => project.slug === "personal-portfolio",
+  )!;
   const sorted = allProjects
     .filter((p) => p.published)
     .filter(
