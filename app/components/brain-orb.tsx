@@ -4,7 +4,6 @@ import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 const BOUNDS = {
   x: 1.6,
@@ -250,7 +249,7 @@ function BrainScene({
 }
 
 export function BrainOrb() {
-  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const controlsRef = useRef<any>(null);
   const scrollBoost = useRef(0);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showHint, setShowHint] = useState(false);
