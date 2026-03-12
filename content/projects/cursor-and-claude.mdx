@@ -1,172 +1,97 @@
 ---
-title: "Cursor x Claude Code"
-description: Breaking down how easy it is to start building with Claude Code and Cursor.
-repository: chronark/zod-bird
-date: "2023-05-21"
+title: Building with Claude Code
+description: How I connect Claude directly to my laptop to build real projects — and how you can too.
+date: "2026-01-01"
 published: true
-  
 ---
 
-- typesafe
-- handles building the url params for you
-- easy transformation of resulting data
-- built in cache directives for nextjs
-- built in retry logic for ratelimited requests
+## What is Claude Code?
 
+Claude Code is Anthropic's official CLI tool that connects Claude directly to your local machine. Instead of copying and pasting code back and forth in a chat window, Claude can read your files, write code, run commands, and build entire projects right from your terminal — all in one conversation.
 
-```ts
-import { Tinybird } from "@chronark/zod-bird";
-import { z } from "zod";
+This is how I build. Every project on this site was touched by Claude Code in some way.
 
-const tb = new Tinybird({ token: "token" });
+---
 
-export const getEvents = tb.buildPipe({
-  pipe: "get_events__v1",
-  parameters: z.object({
-    tenantId: z.string(),
-  }),
-  data: z.object({
-    event: z.string(),
-    time: z.number().transform((t) => new Date(t)),
-  }),
-});
+## Why I Use It
 
+Most AI tools keep you at arm's length from your codebase. Claude Code closes that gap. It can:
 
-const res = await getEvents({ tenantId: "chronark" })
+- Read and edit files across your entire project
+- Run terminal commands on your behalf
+- Catch errors and fix them in the same session
+- Work inside your existing tools (VS Code, Cursor, etc.)
 
-// res.data = {event: string, time: Date}[]
+It's the difference between having an AI that *suggests* code and one that *builds alongside you*.
+
+---
+
+## How to Set It Up
+
+### 1. Install Node.js
+
+Make sure you have Node.js installed on your machine. You can download it at [nodejs.org](https://nodejs.org).
+
+### 2. Install Claude Code
+
+Open your terminal and run:
+
+```bash
+npm install -g @anthropic-ai/claude-code
 ```
 
-## Install
+### 3. Authenticate
 
-```
-npm i @chronark/zod-bird
-```
-
-
-## Ingesting Data
-
-```ts
-// lib/tinybird.ts
-import { Tinybird } from "./client";
-import { z } from "zod";
-
-const tb = new Tinybird({ token: process.env.TINYBIRD_TOKEN! });
-
-export const publishEvent = tb.buildIngestEndpoint({
-  datasource: "events__v1",
-  event: z.object({
-    id: z.string(),
-    tenantId: z.string(),
-    channelId: z.string(),
-    time: z.number().int(),
-    event: z.string(),
-    content: z.string().optional().default(""),
-    metadata: z.string().optional().default(""),
-  }),
-});
+```bash
+claude
 ```
 
-```ts
-// somewhere.ts
-import { publishEvent } from "./lib/tinybird";
+The first time you run it, Claude Code will walk you through connecting your Anthropic account. Once authenticated, you're ready to build.
 
-await publishEvent({
-  id: "1",
-  tenantId: "1",
-  channelId: "1",
-  time: Date.now(),
-  event: "test",
-  content: "test",
-  metadata: JSON.stringify({ test: "test" }),
-});
+---
+
+## Starting a Project
+
+Navigate to any folder on your laptop and start a session:
+
+```bash
+cd my-project
+claude
 ```
 
-
-
-## Querying Endpoints
-
-```ts
-// lib/tinybird.ts
-import { Tinybird } from "./client";
-import { z } from "zod";
-
-const tb = new Tinybird({ token: process.env.TINYBIRD_TOKEN! });
-
-export const getChannelActivity = tb.buildPipe({
-  pipe: "get_channel_activity__v1",
-  parameters: z.object({
-    tenantId: z.string(),
-    channelId: z.string().optional(),
-    start: z.number(),
-    end: z.number().optional(),
-    granularity: z.enum(["1m", "1h", "1d", "1w", "1M"]),
-  }),
-  data: z.object({
-    time: z.string().transform((t) => new Date(t).getTime()),
-    count: z
-      .number()
-      .nullable()
-      .optional()
-      .transform((v) => (typeof v === "number" ? v : 0)),
-  }),
-});
-```
-
-```ts
-// somewhere.ts
-import { getChannelActivity } from "./lib/tinybird";
-
-
-const res = await getChannelActivity({
-   tenantId: "1",
-   channelId: "1",
-   start: 123,
-   end: 1234,
-   granularity: "1h"
-})
+From there, just talk to it like you're working with another developer. For example:
 
 ```
-`res` is the response from the tinybird endpoint, but now fully typed and the data has been parsed according to the schema defined in `data`.
-
-## Advanced
-
-### Caching
-
-You can add cache directives to each pipe.
-
-
-#### Disable caching (useful in Next.js where everything is cached by default)
-
-```ts
-tb.buildPipe({
-  pipe: "some_pipe__v1",
-  parameters: z.object({
-   hello: z.string()
-  }),
-  data: z.object({
-    response: z.string()
-  }),
-   opts: {
-      cache: "no-store" // <-------- Add this
-   };
-});
-
+"Build me a Next.js app with Tailwind CSS and a dark theme"
 ```
 
-#### Cache for 15 minutes
+```
+"Add a contact form that sends emails using Resend"
+```
 
-```ts
+```
+"Fix the bug on line 42 and make sure the tests still pass"
+```
 
-tb.buildPipe({
-  pipe: "some_pipe__v1",
-  parameters: z.object({
-   hello: z.string()
-  }),
-  data: z.object({
-    response: z.string()
-  }),
-   opts: {
-      revalidate: 900 ;// <-------- Add this
-    };
-});
+Claude Code reads your codebase, makes the changes, and explains what it did.
+
+---
+
+## Projects I've Built This Way
+
+Every project you see on this portfolio was built using this workflow:
+
+- **This portfolio** — Next.js, Three.js, Tailwind CSS, all scaffolded and iterated with Claude Code
+- **OCR Intake Form** — Built with Claude Code to digitize volunteer data for Project Vietnam Foundation
+- **LHP Official** — The artist collective site, wired up and deployed with Claude Code assistance
+- **Lynx Combinator** — The program landing page, built end-to-end in a single session
+
+---
+
+## The Honest Truth
+
+You don't need to know how to code to start. You need to know what you want to build.
+
+Claude Code handles the syntax. You handle the vision.
+
+That's the whole idea behind everything I build — and the community I'm growing through [Lynx Combinator](https://ls-portfolio-page.vercel.app/).

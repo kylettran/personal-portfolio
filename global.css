@@ -2,9 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  text-transform: lowercase;
+}
+
 @layer base {
   .text-edge-outline {
     -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 640px) {
+    .text-edge-outline {
+      -webkit-text-fill-color: white;
+      color: white;
+      -webkit-text-stroke: 0px;
+    }
   }
   
   @media (max-width: 768px) {

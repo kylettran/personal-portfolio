@@ -280,7 +280,7 @@ export default function Particles({
 		const nx = -(endY - startY);
 		const ny = endX - startX;
 		const nLen = Math.hypot(nx, ny) || 1;
-		const curve = (Math.random() * 0.04 + 0.03) * Math.hypot(w, h);
+		const curve = (Math.random() * 0.10 + 0.12) * Math.hypot(w, h);
 		const direction = Math.random() > 0.5 ? 1 : -1;
 		const ctrlX = midX + (nx / nLen) * curve * direction;
 		const ctrlY = midY + (ny / nLen) * curve * direction;
@@ -303,10 +303,11 @@ export default function Particles({
 
 	const drawShootingStars = () => {
 		if (!context.current) return;
+		const ctx = context.current;
 		const now = Date.now();
 		if (now >= nextShotAt.current) {
 			shootingStars.current.push(createShootingStar());
-			nextShotAt.current = now + 3000;
+			nextShotAt.current = now + randomBetween(2000, 4000);
 		}
 
 		shootingStars.current = shootingStars.current.filter(
@@ -320,35 +321,81 @@ export default function Particles({
 			const { x, y, tx, ty } = getPathPointAndTangent(star, t);
 			const tailX = x - tx * star.length;
 			const tailY = y - ty * star.length;
-			const gradient = context.current!.createLinearGradient(
-				x,
-				y,
-				tailX,
-				tailY,
-			);
-			gradient.addColorStop(0, `rgba(255, 210, 90, ${star.alpha})`);
-			gradient.addColorStop(0.4, `rgba(255, 140, 60, ${star.alpha * 0.8})`);
-			gradient.addColorStop(1, "rgba(220, 40, 40, 0)");
 
-			context.current!.beginPath();
-			context.current!.moveTo(x, y);
-			context.current!.lineTo(tailX, tailY);
-			context.current!.strokeStyle = gradient;
-			context.current!.lineWidth = 2.5;
-			context.current!.lineCap = "round";
-			context.current!.setTransform(dpr, 0, 0, dpr, 0, 0);
-			context.current!.stroke();
+			// Wide outer glow trail
+			const outerGradient = ctx.createLinearGradient(x, y, tailX, tailY);
+			outerGradient.addColorStop(0, `rgba(100, 200, 255, ${star.alpha * 0.35})`);
+			outerGradient.addColorStop(0.3, `rgba(30, 100, 255, ${star.alpha * 0.2})`);
+			outerGradient.addColorStop(1, "rgba(0, 20, 180, 0)");
+			ctx.save();
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(tailX, tailY);
+			ctx.strokeStyle = outerGradient;
+			ctx.lineWidth = 7;
+			ctx.lineCap = "round";
+			ctx.shadowBlur = 18;
+			ctx.shadowColor = "rgba(60, 160, 255, 0.6)";
+			ctx.stroke();
+			ctx.restore();
 
-			context.current!.shadowBlur = 8;
-			context.current!.shadowColor = "rgba(255, 200, 90, 0.5)";
-			drawStar(
-				x,
-				y,
-				3.2,
-				1.5,
-				`rgba(255, 230, 160, ${Math.min(1, star.alpha + 0.2)})`,
-			);
-			context.current!.shadowBlur = 0;
+			// Main tail — white-hot to deep blue
+			const tailGradient = ctx.createLinearGradient(x, y, tailX, tailY);
+			tailGradient.addColorStop(0, `rgba(255, 255, 255, ${star.alpha})`);
+			tailGradient.addColorStop(0.08, `rgba(180, 240, 255, ${star.alpha})`);
+			tailGradient.addColorStop(0.25, `rgba(60, 180, 255, ${star.alpha * 0.85})`);
+			tailGradient.addColorStop(0.55, `rgba(20, 80, 220, ${star.alpha * 0.5})`);
+			tailGradient.addColorStop(1, "rgba(10, 20, 120, 0)");
+			ctx.save();
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(tailX, tailY);
+			ctx.strokeStyle = tailGradient;
+			ctx.lineWidth = 2.5;
+			ctx.lineCap = "round";
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			ctx.stroke();
+			ctx.restore();
+
+			// Bright inner core
+			const coreGradient = ctx.createLinearGradient(x, y, tailX, tailY);
+			coreGradient.addColorStop(0, `rgba(255, 255, 255, ${star.alpha})`);
+			coreGradient.addColorStop(0.18, `rgba(210, 245, 255, ${star.alpha * 0.7})`);
+			coreGradient.addColorStop(0.45, "rgba(120, 200, 255, 0)");
+			ctx.save();
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(tailX, tailY);
+			ctx.strokeStyle = coreGradient;
+			ctx.lineWidth = 1;
+			ctx.lineCap = "round";
+			ctx.stroke();
+			ctx.restore();
+
+			// Blue flame corona at tip — slight flicker via sine wave
+			const flicker = 1 + Math.sin(now / 90 + star.createdAt) * 0.18;
+			const flameRadius = 9 * flicker;
+			const flameGradient = ctx.createRadialGradient(x, y, 0, x, y, flameRadius);
+			flameGradient.addColorStop(0, `rgba(255, 255, 255, ${star.alpha * 0.95})`);
+			flameGradient.addColorStop(0.25, `rgba(160, 235, 255, ${star.alpha * 0.8})`);
+			flameGradient.addColorStop(0.55, `rgba(40, 130, 255, ${star.alpha * 0.5})`);
+			flameGradient.addColorStop(1, "rgba(0, 40, 200, 0)");
+			ctx.save();
+			ctx.beginPath();
+			ctx.arc(x, y, flameRadius, 0, Math.PI * 2);
+			ctx.fillStyle = flameGradient;
+			ctx.shadowBlur = 22;
+			ctx.shadowColor = "rgba(100, 200, 255, 0.95)";
+			ctx.fill();
+			ctx.restore();
+
+			// Sharp bright spark at the very tip
+			ctx.save();
+			ctx.shadowBlur = 14;
+			ctx.shadowColor = "rgba(200, 240, 255, 1)";
+			drawStar(x, y, 3.5, 1.6, `rgba(255, 255, 255, ${Math.min(1, star.alpha + 0.2)})`);
+			ctx.shadowBlur = 0;
+			ctx.restore();
 		});
 	};
 

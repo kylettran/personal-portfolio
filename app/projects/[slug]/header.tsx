@@ -100,6 +100,17 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 						<p className="mt-6 text-lg leading-8 text-zinc-300">
 							{project.description}
 						</p>
+						{project.url && (
+							<div className="mt-6">
+								<Link
+									target="_blank"
+									href={project.url}
+									className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-black bg-white rounded-full hover:bg-zinc-200 duration-200"
+								>
+									Visit Project →
+								</Link>
+							</div>
+						)}
 					</div>
 
 				</div>
