@@ -53,12 +53,14 @@ export function LynxCarousel() {
           <div className="flex touch-pan-y">
             {slides.map((slide) => (
               <div key={slide.src} className="flex-[0_0_100%] min-w-0">
-                <img
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="w-full h-auto object-cover block select-none"
-                  draggable={false}
-                />
+                <div className="relative w-full aspect-video">
+                  <img
+                    src={slide.src}
+                    alt={slide.alt}
+                    className="absolute inset-0 w-full h-full object-cover block select-none"
+                    draggable={false}
+                  />
+                </div>
               </div>
             ))}
           </div>
