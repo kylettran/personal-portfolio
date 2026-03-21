@@ -26,6 +26,16 @@ const BrainProjectLayout = dynamic(
 	},
 );
 
+const LynxCarousel = dynamic(
+	() => import("./lynx-carousel").then((mod) => mod.LynxCarousel),
+	{
+		ssr: false,
+		loading: () => (
+			<div className="not-prose my-10 h-64 w-full max-w-3xl mx-auto rounded-xl border border-zinc-200 bg-zinc-100 animate-pulse" />
+		),
+	},
+);
+
 function clsx(...args: any) {
 	return args.filter(Boolean).join(" ");
 }
@@ -185,6 +195,7 @@ const components = {
 	Image,
 	BrainOrb,
 	BrainProjectLayout,
+	LynxCarousel,
 };
 
 interface MdxProps {
