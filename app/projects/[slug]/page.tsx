@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { allProjects } from "contentlayer/generated";
 import { Mdx } from "@/app/components/mdx";
 import { Header } from "./header";
+import { ProjectPagination } from "./project-pagination";
 import "./mdx.css";
 import { ReportView } from "./view";
 import { Redis } from "@upstash/redis";
@@ -61,6 +62,8 @@ export default async function PostPage({ params }: Props) {
       >
         <Mdx code={project.body.code} />
       </article>
+
+      <ProjectPagination currentSlug={slug} isBrain={isBrainProject} />
     </div>
   );
 }
