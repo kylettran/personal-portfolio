@@ -26,17 +26,17 @@ export const Navigation: React.FC = () => {
 						: "bg-zinc-900/500  border-zinc-800 "
 				}`}
 			>
-				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex justify-between gap-8">
+				<div className="container flex flex-row-reverse items-center justify-between px-6 py-3 mx-auto">
+					<div className="flex items-center gap-4">
 						<Link
 							href="/projects"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
+							className="py-3 px-2 duration-200 text-zinc-400 hover:text-zinc-100 min-h-[44px] flex items-center"
 						>
 							Projects
 						</Link>
 						<Link
 							href="/contact"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
+							className="py-3 px-2 duration-200 text-zinc-400 hover:text-zinc-100 min-h-[44px] flex items-center"
 						>
 							Contact
 						</Link>
@@ -44,9 +44,9 @@ export const Navigation: React.FC = () => {
 
 					<Link
 						href="/"
-						className="duration-200 text-zinc-300 hover:text-zinc-100"
+						className="py-3 px-2 duration-200 text-zinc-300 hover:text-zinc-100 min-h-[44px] flex items-center"
 					>
-						<ArrowLeft className="w-6 h-6 " />
+						<ArrowLeft className="w-6 h-6" />
 					</Link>
 				</div>
 			</div>

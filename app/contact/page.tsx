@@ -42,10 +42,10 @@ export default function Example() {
 		<div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
 			<Navigation />
 			<div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
-				<div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-4 lg:gap-16">
+				<div className="grid w-full grid-cols-1 gap-6 mx-auto mt-20 sm:mt-0 sm:grid-cols-4 sm:gap-8 lg:gap-16">
 					{/* Portrait Card */}
 					<Card>
-						<div className="relative w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
+						<div className="relative w-full h-full min-h-[220px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
 							<Image
 								src="/portrait.JPEG"
 								alt="Kyle Tran"
@@ -60,7 +60,7 @@ export default function Example() {
 							<Link
 								href={s.href}
 								target="_blank"
-								className="p-4 relative flex flex-col items-center duration-700 group h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px]"
+								className="p-4 relative flex flex-col items-center duration-700 group h-full min-h-[220px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px]"
 							>
 								<span
 									className="absolute w-px h-1/2 top-12 bg-gradient-to-b from-zinc-500 via-zinc-500/50 to-transparent"

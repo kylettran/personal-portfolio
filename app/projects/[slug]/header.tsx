@@ -39,8 +39,8 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 						: "bg-white/10  border-zinc-200 lg:border-transparent"
 				}`}
 			>
-				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex justify-between gap-8">
+				<div className="container flex flex-row-reverse items-center justify-between px-6 py-3 mx-auto">
+					<div className="flex items-center gap-6">
 						<span
 							title="View counter for this page"
 							className={`duration-200 hover:font-medium flex items-center gap-1 ${
@@ -54,7 +54,7 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 								views,
 							)}
 						</span>
-						<Link target="_blank" href="https://x.com/kyle_trxn">
+						<Link target="_blank" href="https://x.com/kyle_trxn" className="min-h-[44px] flex items-center px-1">
 							<svg
 								viewBox="0 0 24 24"
 								aria-hidden="true"
@@ -68,7 +68,7 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 								<path d="M18.244 2H21l-6.52 7.46L22 22h-6.828l-4.82-6.343L4.94 22H2l6.98-7.98L2 2h6.828l4.36 5.72L18.244 2Zm-1.2 18h1.5L7.04 4h-1.6l11.604 16Z" />
 							</svg>
 						</Link>
-						<Link target="_blank" href="https://github.com/kylettran">
+						<Link target="_blank" href="https://github.com/kylettran" className="min-h-[44px] flex items-center px-1">
 							<Github
 								className={`w-6 h-6 duration-200 hover:font-medium ${
 									isIntersecting
@@ -81,17 +81,17 @@ export const Header: React.FC<Props> = ({ project, views }) => {
 
 					<Link
 						href="/projects"
-						className={`duration-200 hover:font-medium ${
+						className={`py-3 px-2 duration-200 hover:font-medium min-h-[44px] flex items-center ${
 							isIntersecting
 								? " text-zinc-400 hover:text-zinc-100"
 								: "text-zinc-600 hover:text-zinc-900"
 						} `}
 					>
-						<ArrowLeft className="w-6 h-6 " />
+						<ArrowLeft className="w-6 h-6" />
 					</Link>
 				</div>
 			</div>
-			<div className="container mx-auto relative isolate overflow-hidden  py-24 sm:py-32">
+			<div className="container mx-auto relative isolate overflow-hidden py-16 sm:py-24 lg:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8 text-center flex flex-col items-center">
 					<div className="mx-auto max-w-2xl lg:mx-0">
 						<h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-display">

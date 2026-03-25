@@ -111,7 +111,18 @@ export default async function ProjectsPage() {
         </div>
         <div className="hidden w-full h-px md:block bg-zinc-800" />
 
-        <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
+        {/* Mobile: flat date-sorted list — the 3-column masonry split breaks
+            sort order on mobile since columns render sequentially. */}
+        <div className="grid grid-cols-1 gap-4 mx-auto md:hidden">
+          {sorted.map((project) => (
+            <Card key={project.slug}>
+              <Article project={project} views={views[project.slug] ?? 0} />
+            </Card>
+          ))}
+        </div>
+
+        {/* Desktop (md+): masonry 3-column layout */}
+        <div className="hidden md:grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-3">
           <div className="grid grid-cols-1 gap-4">
             {sorted
               .filter((_, i) => i % 3 === 0)
