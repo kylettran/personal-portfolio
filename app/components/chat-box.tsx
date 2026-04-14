@@ -67,20 +67,23 @@ export function ChatBox() {
   }
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm">
-      {/* Message area */}
+    <div className="w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm">
+
+      {/* Message area or empty-state placeholder */}
       {messages.length > 0 ? (
-        <div className="max-h-60 overflow-y-auto space-y-2 p-4">
+        <div className="overflow-y-auto space-y-3 p-5 sm:p-6"
+          style={{ maxHeight: 'clamp(180px, 35vh, 340px)' }}
+        >
           {messages.map((msg, i) => (
             <div
               key={i}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <span
-                className={`inline-block max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed ${
+                className={`inline-block max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-white text-black'
-                    : 'bg-white/5 text-zinc-200'
+                    : 'bg-white/[0.06] text-zinc-200'
                 }`}
               >
                 {msg.content || <span className="opacity-40">...</span>}
@@ -90,15 +93,18 @@ export function ChatBox() {
           <div ref={messagesEndRef} />
         </div>
       ) : (
-        /* Empty state placeholder */
-        <div className="flex items-center justify-center h-36 text-zinc-600 text-sm">
+        /* Empty state — taller on desktop so the card feels prominent */
+        <div
+          className="flex items-center justify-center text-zinc-600 text-sm"
+          style={{ height: 'clamp(140px, 22vh, 220px)' }}
+        >
           Ask me anything about Kyle...
         </div>
       )}
 
-      {/* Suggestion pills — only visible before first message */}
+      {/* Suggestion pills — only shown before first message */}
       {messages.length === 0 && (
-        <div className="flex flex-wrap items-center justify-center gap-2 px-4 pb-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 px-5 pb-5">
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
@@ -112,10 +118,10 @@ export function ChatBox() {
       )}
 
       {/* Divider */}
-      <div className="border-t border-white/8" />
+      <div className="border-t border-white/[0.08]" />
 
       {/* Input row */}
-      <div className="flex items-center gap-3 px-4 py-3">
+      <div className="flex items-center gap-3 px-5 py-4">
         <input
           type="text"
           value={input}
@@ -129,7 +135,7 @@ export function ChatBox() {
         <button
           onClick={() => sendMessage(input)}
           disabled={isStreaming || !input.trim()}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-500 text-white text-xs transition-opacity disabled:opacity-30 hover:bg-violet-400"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-500 text-white text-xs transition-all disabled:opacity-25 hover:bg-violet-400 hover:scale-105"
           aria-label="Send message"
         >
           ↑

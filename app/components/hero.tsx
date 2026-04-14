@@ -17,8 +17,11 @@ export function Hero() {
         };
 
   return (
-    <section id="hero" className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-20">
-      <div className="flex w-full max-w-lg flex-col items-center gap-5 text-center">
+    <section
+      id="hero"
+      className="flex min-h-[100dvh] flex-col items-center justify-center px-4 sm:px-8 py-16"
+    >
+      <div className="flex w-full max-w-[min(90vw,760px)] flex-col items-center gap-6 text-center">
 
         {/* Memoji */}
         <motion.div
@@ -29,16 +32,16 @@ export function Hero() {
           <Image
             src="/memoji.jpg"
             alt="Kyle Tran"
-            width={96}
-            height={96}
+            width={108}
+            height={108}
             className="rounded-full"
             priority
           />
         </motion.div>
 
-        {/* Name — inline, name in purple gradient */}
+        {/* Name */}
         <motion.h1
-          className="text-2xl font-semibold text-white"
+          className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white leading-tight"
           {...fadeUp(0.1)}
         >
           Hi, I&apos;m{' '}
@@ -47,7 +50,7 @@ export function Hero() {
           </span>
         </motion.h1>
 
-        {/* Chat card */}
+        {/* Chat — fills the full container width */}
         <motion.div className="w-full" {...fadeUp(0.2)}>
           <ChatBox />
         </motion.div>
