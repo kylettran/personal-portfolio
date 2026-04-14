@@ -26,7 +26,7 @@ export function NavDesktop() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <Link href="#hero" className="font-display text-lg text-white hover:opacity-70 transition-opacity">
+        <Link href="#hero" className="hidden md:block font-display text-lg text-white hover:opacity-70 transition-opacity">
           KT
         </Link>
 

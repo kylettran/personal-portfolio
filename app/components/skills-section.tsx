@@ -2,7 +2,7 @@ import { TechSphere } from './tech-sphere';
 
 export function SkillsSection() {
   return (
-    <section id="skills" className="w-full px-6 py-24">
+    <section id="skills" className="w-full overflow-hidden px-6 py-24">
       <div className="mx-auto max-w-5xl">
         <div className="mb-12">
           <p className="text-xs uppercase tracking-widest text-zinc-500">Tech Stack</p>
