@@ -8,14 +8,14 @@ const tabs = [
   { label: 'Home', href: '#hero', icon: Home, section: 'hero' },
   { label: 'Projects', href: '#projects', icon: FolderOpen, section: 'projects' },
   { label: 'Skills', href: '#skills', icon: Wrench, section: 'skills' },
-  { label: 'Connect', href: '#more', icon: ExternalLink, section: 'more' },
+  { label: 'Contact', href: '#contact', icon: ExternalLink, section: 'contact' },
 ];
 
 export function NavMobile() {
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
-    const sectionIds = ['hero', 'about', 'projects', 'skills', 'more'];
+    const sectionIds = ['hero', 'about', 'projects', 'skills', 'more', 'contact'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

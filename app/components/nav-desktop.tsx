@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Projects', href: '#projects' },
   { label: 'Skills', href: '#skills' },
   { label: 'More', href: '#more' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 export function NavDesktop() {
