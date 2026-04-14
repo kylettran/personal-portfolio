@@ -9,22 +9,43 @@ interface Message {
 
 const SUGGESTIONS = ['Work', 'About Kyle', 'Skills', 'Connect'];
 
+// Contextual follow-ups based on what the user just asked about
+const FOLLOW_UPS: Record<string, string[]> = {
+  work:             ['Lynx Combinator', "What's Kyle building now?", 'Past companies', 'Favorite stack'],
+  'about kyle':     ["Kyle's background", 'Where is Kyle based?', 'What drives Kyle?', 'How to reach Kyle?'],
+  'kyle\'s background': ['What drives Kyle?', 'How to reach Kyle?', "Kyle's projects"],
+  skills:           ['AI tools Kyle uses', 'What can Kyle build?', 'Years of experience?', 'Favorite stack'],
+  connect:          ['Email Kyle', 'LinkedIn', 'X / Twitter', 'Collab ideas'],
+  'lynx combinator':['What does Lynx do?', 'Is it live?', 'How to join?', "Kyle's role"],
+  'favorite stack': ['Next.js details', 'Why AI-native?', 'What Kyle builds with it'],
+  default:          ['Tell me more', 'What else?', 'How to reach Kyle?', 'Kyle\'s projects'],
+};
+
+function getFollowUps(text: string): string[] {
+  const lower = text.toLowerCase();
+  for (const key of Object.keys(FOLLOW_UPS)) {
+    if (key !== 'default' && lower.includes(key)) return FOLLOW_UPS[key];
+  }
+  return FOLLOW_UPS.default;
+}
+
 export function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [followUps, setFollowUps] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll inside the card — not the page
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [messages]);
+  }, [messages, followUps]);
 
   async function sendMessage(text: string) {
     const trimmed = text.trim();
     if (!trimmed || isStreaming) return;
 
     setInput('');
+    setFollowUps([]); // clear previous follow-ups while responding
     setMessages((prev) => [...prev, { role: 'user', content: trimmed }]);
     setIsStreaming(true);
     setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
@@ -50,6 +71,9 @@ export function ChatBox() {
           return [...prev.slice(0, -1), { ...last, content: last.content + chunk }];
         });
       }
+
+      // Show contextual follow-ups once the response is complete
+      setFollowUps(getFollowUps(trimmed));
     } catch {
       setMessages((prev) => {
         const last = prev[prev.length - 1];
@@ -68,18 +92,13 @@ export function ChatBox() {
   }
 
   return (
-    /*
-     * Fixed-height card — the card never grows or shrinks when messages appear.
-     * All content scrolls *inside* it so the page never shifts.
-     */
     <div
       className="w-full flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm"
       style={{ height: 'clamp(280px, 42vh, 400px)' }}
     >
-      {/* ── Scrollable content area (fills all space above the input) ── */}
+      {/* Scrollable content area */}
       <div className="flex-1 overflow-y-auto">
         {messages.length > 0 ? (
-          /* Messages */
           <div className="space-y-3 p-5">
             {messages.map((msg, i) => (
               <div
@@ -97,10 +116,26 @@ export function ChatBox() {
                 </span>
               </div>
             ))}
+
+            {/* Follow-up chips appear after AI finishes responding */}
+            {!isStreaming && followUps.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {followUps.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => sendMessage(s)}
+                    className="rounded-full border border-white/10 px-3 py-1 text-xs text-zinc-400 transition-colors hover:border-violet-400/40 hover:text-violet-300"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         ) : (
-          /* Empty state + suggestions — stacked inside the same scroll area */
+          /* Initial empty state */
           <div className="flex h-full flex-col items-center justify-center gap-5 px-5 py-6">
             <span className="text-zinc-600 text-sm">Ask me anything about Kyle...</span>
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -118,7 +153,7 @@ export function ChatBox() {
         )}
       </div>
 
-      {/* ── Fixed input row at the bottom ── */}
+      {/* Fixed input row */}
       <div className="shrink-0 border-t border-white/[0.08]">
         <div className="flex items-center gap-3 px-5 py-4">
           <input
