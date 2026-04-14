@@ -18,7 +18,7 @@ export function Hero() {
 
   return (
     <section id="hero" className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-24">
-      <div className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
+      <div className="flex w-full max-w-3xl flex-col items-center gap-8 text-center">
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -27,8 +27,8 @@ export function Hero() {
           <Image
             src="/memoji.jpg"
             alt="Kyle Tran"
-            width={96}
-            height={96}
+            width={160}
+            height={160}
             className="rounded-full"
             priority
           />
@@ -36,16 +36,16 @@ export function Hero() {
 
         <motion.div {...fadeUp(0.1)}>
           <p className="text-zinc-500 text-sm tracking-wide">Hi, I&apos;m</p>
-          <h1 className="font-display text-5xl text-white sm:text-7xl md:text-8xl">
+          <h1 className="font-display text-6xl text-white sm:text-7xl md:text-8xl lg:text-9xl">
             Kyle Tran
           </h1>
         </motion.div>
 
-        <motion.p className="max-w-sm text-zinc-400 text-base sm:text-lg" {...fadeUp(0.2)}>
+        <motion.p className="max-w-md text-zinc-400 text-base sm:text-lg" {...fadeUp(0.2)}>
           Founder. Builder. Shaping the next generation of AI creators.
         </motion.p>
 
-        <motion.div className="w-full" {...fadeUp(0.3)}>
+        <motion.div className="w-full max-w-2xl" {...fadeUp(0.3)}>
           <ChatBox />
         </motion.div>
 
