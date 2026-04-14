@@ -70,7 +70,7 @@ export function TechSphere() {
     cancelAnimationFrame(rafRef.current);
 
     function tick() {
-      if (!isDragging.current && !prefersReduced) rotY.current += 0.006;
+      if (!isDragging.current && !prefersReduced) rotY.current += 0.002;
       velX.current *= 0.88;
       velY.current *= 0.88;
       if (!isDragging.current) {
@@ -136,8 +136,8 @@ export function TechSphere() {
             height: radius * 2,
             top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle at 38% 35%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, transparent 70%)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'radial-gradient(circle at 38% 35%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 45%, transparent 70%)',
+            border: '1px solid rgba(255,255,255,0.22)',
           }}
         />
 
