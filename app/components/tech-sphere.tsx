@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { tools } from '@/lib/tools';
 
-const RADIUS = 125;
+const RADIUS = 185;
 
 // Evenly distribute N points on a sphere surface using the Fibonacci spiral method
 function fibonacciSphere(count: number, radius: number): [number, number, number][] {
@@ -130,7 +130,7 @@ export function TechSphere() {
     <div className="flex justify-center">
       <div
         className="relative cursor-grab active:cursor-grabbing select-none touch-none"
-        style={{ width: '100%', maxWidth: containerSize, height: containerSize }}
+        style={{ width: '100%', maxWidth: containerSize, height: containerSize, minHeight: containerSize }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -162,9 +162,9 @@ export function TechSphere() {
             className="absolute pointer-events-none"
             style={{ top: '50%', left: '50%', willChange: 'transform, opacity' }}
           >
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-zinc-700/50 bg-zinc-900/90 backdrop-blur-sm px-3 py-2 text-center shadow-lg">
-              <span className="text-base leading-none">{tool.emoji}</span>
-              <span className="text-[9px] font-medium text-zinc-300 whitespace-nowrap tracking-wide">
+            <div className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 backdrop-blur-sm px-4 py-3 text-center shadow-lg">
+              <span className="text-xl leading-none">{tool.emoji}</span>
+              <span className="text-[11px] font-medium text-zinc-200 whitespace-nowrap tracking-wide">
                 {tool.name}
               </span>
             </div>
