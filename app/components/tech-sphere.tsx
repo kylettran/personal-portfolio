@@ -150,7 +150,18 @@ export function TechSphere() {
             style={{ top: '50%', left: '50%', willChange: 'transform, opacity' }}
           >
             <div className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 backdrop-blur-sm px-3 py-2 text-center shadow-lg">
-              <span className="text-lg leading-none">{tool.emoji}</span>
+              {tool.logo ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={tool.logo}
+                  alt={tool.name}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 object-contain"
+                />
+              ) : (
+                <span className="text-lg leading-none">{tool.emoji}</span>
+              )}
               <span className="text-[10px] font-medium text-zinc-200 whitespace-nowrap tracking-wide">
                 {tool.name}
               </span>
