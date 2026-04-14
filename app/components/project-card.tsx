@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Eye } from 'lucide-react';
 import type { Project } from '@/lib/projects';
 
 interface ProjectCardProps {
@@ -11,12 +12,60 @@ interface ProjectCardProps {
   index: number;
 }
 
+function useViewCount(slug: string) {
+  const [views, setViews] = useState<number | null>(null);
+  const counted = useRef(false);
+
+  // Fetch the current count on mount
+  useEffect(() => {
+    fetch(`/api/views/${slug}`)
+      .then((r) => r.json())
+      .then((d) => setViews(d.views))
+      .catch(() => {});
+  }, [slug]);
+
+  // Increment once per browser session when the card enters the viewport
+  const cardRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    // Session deduplication — don't count if already counted this tab session
+    const sessionKey = `viewed:${slug}`;
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !counted.current) {
+          counted.current = true;
+          sessionStorage.setItem(sessionKey, '1');
+          observer.disconnect();
+
+          fetch(`/api/views/${slug}`, { method: 'POST' })
+            .then((r) => r.json())
+            .then((d) => setViews(d.views))
+            .catch(() => {});
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [slug]);
+
+  return { views, cardRef };
+}
+
 export function ProjectCard({ project, index }: ProjectCardProps) {
   const shouldReduceMotion = useReducedMotion();
   const isEven = index % 2 === 1;
+  const { views, cardRef } = useViewCount(project.slug);
 
   return (
     <motion.article
+      ref={cardRef}
       initial={shouldReduceMotion ? {} : { opacity: 0, y: 30 }}
       whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
@@ -33,6 +82,13 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           {project.status === 'in-development' && (
             <span className="rounded-full border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300">
               In Development
+            </span>
+          )}
+          {/* View count */}
+          {views !== null && (
+            <span className="ml-auto flex items-center gap-1 text-xs text-zinc-600">
+              <Eye size={12} />
+              {views.toLocaleString()}
             </span>
           )}
         </div>
