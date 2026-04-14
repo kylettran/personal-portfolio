@@ -1,5 +1,4 @@
-import { withContentlayer } from "next-contentlayer";
-
+// next.config.mjs
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -12,18 +11,9 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  experimental: {
-    mdxRs: true,
-  },
   async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
+    return [{ source: "/(.*)", headers: securityHeaders }],
   },
 };
 
-export default withContentlayer(nextConfig);
+export default nextConfig;
