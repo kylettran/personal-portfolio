@@ -12,7 +12,7 @@
   }
 
   body {
-    background-color: #000;
+    background: radial-gradient(ellipse at 50% 0%, rgba(109, 40, 217, 0.18) 0%, transparent 65%), #07000f;
     color: white;
     overflow-x: hidden;
   }
