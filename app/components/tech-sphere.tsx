@@ -31,14 +31,14 @@ function rotatePoint(
 
 // Pick radius based on viewport width — called client-side only
 function getRadius(): number {
-  if (typeof window === 'undefined') return 120;
-  if (window.innerWidth >= 1024) return 185;
-  if (window.innerWidth >= 640)  return 150;
-  return 110;
+  if (typeof window === 'undefined') return 160;
+  if (window.innerWidth >= 1024) return 270;
+  if (window.innerWidth >= 640)  return 210;
+  return 150;
 }
 
 export function TechSphere() {
-  const [radius, setRadius] = useState(120); // safe SSR default
+  const [radius, setRadius] = useState(160); // safe SSR default
   const itemRefs   = useRef<(HTMLDivElement | null)[]>([]);
   const posRef     = useRef<[number, number, number][]>([]);
   const rotX       = useRef(0.25);
@@ -84,7 +84,7 @@ export function TechSphere() {
         if (!el) return;
         const [x, y, z] = rotatePoint(pos, rotX.current, rotY.current);
         const depth   = (z + radius) / (radius * 2);
-        const scale   = 0.45 + depth * 0.55;
+        const scale   = 0.5 + depth * 0.5;
         const opacity = 0.08 + depth * 0.92;
         el.style.transform = `translate(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px)) scale(${scale.toFixed(3)})`;
         el.style.opacity   = opacity.toFixed(3);
@@ -109,14 +109,14 @@ export function TechSphere() {
     if (!isDragging.current) return;
     const dx = e.clientX - lastPtr.current.x;
     const dy = e.clientY - lastPtr.current.y;
-    rotY.current += dx * 0.012;
-    rotX.current += dy * 0.012;
-    velY.current = dx * 0.012;
-    velX.current = dy * 0.012;
+    rotY.current -= dx * 0.012;
+    rotX.current -= dy * 0.012;
+    velY.current = -dx * 0.012;
+    velX.current = -dy * 0.012;
     lastPtr.current = { x: e.clientX, y: e.clientY };
   }
 
-  const containerSize = radius * 2 + 140;
+  const containerSize = radius * 2 + 180;
 
   return (
     <div className="flex justify-center">
@@ -149,20 +149,20 @@ export function TechSphere() {
             className="absolute pointer-events-none"
             style={{ top: '50%', left: '50%', willChange: 'transform, opacity' }}
           >
-            <div className="flex flex-col items-center gap-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 backdrop-blur-sm px-3 py-2 text-center shadow-lg">
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-zinc-700/50 bg-zinc-900/90 backdrop-blur-sm px-4 py-3 text-center shadow-lg">
               {tool.logo ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={tool.logo}
                   alt={tool.name}
-                  width={20}
-                  height={20}
-                  className="h-5 w-5 object-contain"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 object-contain"
                 />
               ) : (
-                <span className="text-lg leading-none">{tool.emoji}</span>
+                <span className="text-2xl leading-none">{tool.emoji}</span>
               )}
-              <span className="text-[10px] font-medium text-zinc-200 whitespace-nowrap tracking-wide">
+              <span className="text-xs font-medium text-zinc-200 whitespace-nowrap tracking-wide">
                 {tool.name}
               </span>
             </div>
