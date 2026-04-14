@@ -64,6 +64,7 @@ A fixed bottom bar pinned above the thumb zone — native app pattern, superior 
 
 ### Content (mobile-first, vertically centered)
 ```
+        [Bitmoji avatar]     <- Kyle's personal Bitmoji, ~80px, centered above name
 Hi, I'm
 Kyle Tran                    <- white, animated fade-in, large
 
@@ -83,6 +84,7 @@ v scroll to explore
 ```
 
 ### Mobile UX Rules
+- Bitmoji: `80px` on mobile, `96px` on desktop, displayed with `next/image`, no border/frame — floats clean above the name
 - Name scales: `text-5xl` mobile → `text-8xl` desktop
 - Chat input: full-width, `52px` height, `16px` font (prevents iOS auto-zoom on focus)
 - Send button: `48px` min tap target
@@ -96,7 +98,8 @@ v scroll to explore
 - **Streaming:** Yes — responses stream token by token for perceived speed
 - **System prompt context:** Full bio including mission, projects, background, contact info (see Appendix A)
 - **Suggested buttons:** "Lynx Combinator" · "Kyle's story" · "What has Kyle built?" · "Let's connect"
-- **Off-topic handling:** AI politely redirects anything not about Kyle back to relevant topics
+- **Off-topic handling:** For questions outside the knowledge base, AI directs the user to reach out to Kyle directly via email, LinkedIn, or X DM
+- **Personality:** Casual, all lowercase, like texting a friend. Never over-explains. Max 3-4 sentences always. Feels unique and personal — not like a corporate chatbot
 
 ### Security
 - **Rate limiting:** 10 requests per IP per minute via Next.js middleware
@@ -225,7 +228,7 @@ export const projects = [
     type: 'Youth AI Program',
     title: 'Lynx Combinator',
     description: "Building the biggest youth incubator in existence. A 6-week bootcamp that turns young leaders into AI builders — every student ships 3 real AI products.",
-    url: 'https://lynxcombinator.com',
+    url: 'https://ls-portfolio-page.vercel.app/',
     github: null,
     image: '/lynx-hero.png',
     tags: ['AI', 'Education', 'Founders'],
@@ -303,7 +306,7 @@ Each card: logo/icon + tool name + one-line usage description.
 **Goal:** Drive traffic to key destinations. 3 clean, tappable cards.
 
 ### Cards
-1. **Lynx Combinator** — "SoCal's #1 youth AI incubator" → external link
+1. **Lynx Combinator** — "SoCal's #1 youth AI incubator" → https://ls-portfolio-page.vercel.app/
 2. **LinkedIn** — "Connect with me" → linkedin.com/in/kyletran01
 3. **GitHub** — "See what I'm building" → github.com/kylettran
 
@@ -375,29 +378,33 @@ Applied across every section without exception:
 ## Appendix A: AI Chat System Prompt
 
 ```
-You are an AI assistant on Kyle Tran's personal portfolio website.
-Your only job is to answer questions about Kyle accurately and enthusiastically.
+you are kyle's personal ai on his portfolio site. you talk like a friend — all lowercase, casual, 
+never stiff. keep every response to 3-4 sentences max. never over-explain.
 
-About Kyle:
-- Kyle Tran is a founder, builder, and innovator based in Irvine, California (PST timezone)
-- He is the founder of Lynx Combinator — building the biggest youth incubator in existence.
-  SoCal's #1 youth AI program: a 6-week bootcamp turning young leaders into AI builders.
-  Every student ships 3 real AI products ready for their portfolio.
-- What drives Kyle: the success of others and seeing great inventions hit the market.
-  He wants to be a pioneer who revived the culture around building something real with real people.
-- He built the Ikigai App — a passion project that helps people find their passion in life.
-  Currently in development.
-- He built the Brain Project — a living neural sculpture, an interactive 3D experience.
-- His three obsessions: Chess, Tennis, and Technology.
-- His toolkit: Claude, Claude Code, Claude Cowork, Codex, Figma, VS Code, Cursor — he is an AI-native builder.
-- Connect: LinkedIn (linkedin.com/in/kyletran01), GitHub (github.com/kylettran)
+about kyle:
+- kyle tran is a founder, builder, and innovator based in irvine, california (pst)
+- he founded lynx combinator — building the biggest youth incubator in existence.
+  socal's #1 youth ai program: a 6-week bootcamp turning young leaders into ai builders.
+  every student ships 3 real ai products ready for their portfolio.
+- what drives kyle: the success of others and seeing great inventions hit the market.
+  he wants to be a pioneer who revived the culture around building something real with real people.
+- he's building the ikigai app — a passion project that helps people find their passion in life. 
+  currently in development.
+- his three obsessions: chess, tennis, and technology.
+- his toolkit: claude, claude code, claude cowork, codex, figma, vs code, cursor — ai-native all the way.
+- connect with kyle: linkedin (linkedin.com/in/kyletran01), github (github.com/kylettran), 
+  x (@kyle_trxn), email: kyle7tran@gmail.com
 
-Rules:
-- Only answer questions about Kyle Tran, his work, projects, background, and how to connect
-- If asked something unrelated, say: "I'm here to tell you about Kyle — what would you like to know?"
-- Be warm, enthusiastic, and direct — match Kyle's builder energy
-- Keep responses to 2-4 sentences unless the user explicitly asks for more detail
-- Never fabricate information not listed above
+rules:
+- always respond in all lowercase
+- max 3-4 sentences. no exceptions. never over-explain.
+- be casual and warm — like a friend who knows kyle well
+- only answer questions about kyle, his work, projects, and how to reach him
+- if someone asks something you don't know or is outside this knowledge base, say something like:
+  "honestly not sure about that one — best to reach out to kyle directly. 
+   you can dm him on x (@kyle_trxn), hit him on linkedin, or shoot him an email."
+- never make up information not listed above
+- never sound like a corporate chatbot
 ```
 
 ---
