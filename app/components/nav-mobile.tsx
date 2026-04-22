@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Home, FolderOpen, Wrench, ExternalLink } from 'lucide-react';
+import { Home, FolderOpen, Wrench, FileText, ExternalLink } from 'lucide-react';
 
 const tabs = [
   { label: 'Home', href: '#hero', icon: Home, section: 'hero' },
+  { label: 'Resume', href: '#resume', icon: FileText, section: 'resume' },
   { label: 'Projects', href: '#projects', icon: FolderOpen, section: 'projects' },
   { label: 'Skills', href: '#skills', icon: Wrench, section: 'skills' },
   { label: 'Contact', href: '#contact', icon: ExternalLink, section: 'contact' },
@@ -15,7 +16,7 @@ export function NavMobile() {
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
-    const sectionIds = ['hero', 'about', 'projects', 'skills', 'more', 'contact'];
+    const sectionIds = ['hero', 'about', 'resume', 'projects', 'skills', 'more', 'contact'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
