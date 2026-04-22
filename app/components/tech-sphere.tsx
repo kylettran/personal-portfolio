@@ -109,9 +109,9 @@ export function TechSphere() {
     if (!isDragging.current) return;
     const dx = e.clientX - lastPtr.current.x;
     const dy = e.clientY - lastPtr.current.y;
-    rotY.current -= dx * 0.012;
+    rotY.current += dx * 0.012;
     rotX.current -= dy * 0.012;
-    velY.current = -dx * 0.012;
+    velY.current = dx * 0.012;
     velX.current = -dy * 0.012;
     lastPtr.current = { x: e.clientX, y: e.clientY };
   }
